@@ -3,13 +3,19 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" id="themeColor" content="#080e1b">
 <title>IT System TA</title>
+
+<!-- Favicon โลโก้บนแท็บเบราว์เซอร์ -->
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='18' fill='%232563eb'/%3E%3Cg transform='translate(14,14) scale(1.5)' stroke='white' fill='none' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Crect x='3' y='4' width='18' height='14' rx='2'/%3E%3Cpath d='M8 22h8M12 18v4'/%3E%3C/g%3E%3C/svg%3E">
 
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600&display=swap');
 
 :root {
-    --bg: radial-gradient(circle at top center, #132240 0%, #080e1b 65%);
+    --bg-base: #080e1b;
+    --bg-glow: rgba(37, 99, 235, 0.24);
+    --grid-line: rgba(56, 189, 248, 0.06);
     --text-main: #f1f5f9;
     --text-sub: #94a3b8;
     --text-footer: #475569;
@@ -19,7 +25,7 @@
     --card-border: #263b5a;
     --card-border-hover: #38bdf8;
     --card-shadow: none;
-    --card-shadow-hover: 0 12px 32px rgba(56, 189, 248, 0.15);
+    --card-shadow-hover: 0 14px 36px rgba(56, 189, 248, 0.22);
     --btn-bg: rgba(56, 189, 248, 0.12);
     --btn-bg-hover: rgba(56, 189, 248, 0.22);
     --btn-text: #38bdf8;
@@ -28,10 +34,13 @@
     --toggle-color: #fbbf24;
     --clock-bg: rgba(17, 28, 48, 0.65);
     --clock-border: rgba(38, 59, 90, 0.8);
+    --shine-color: rgba(255, 255, 255, 0.16);
 }
 
 [data-theme="light"] {
-    --bg: radial-gradient(circle at top center, #e0edff 0%, #f8fafc 65%);
+    --bg-base: #f8fafc;
+    --bg-glow: rgba(37, 99, 235, 0.15);
+    --grid-line: rgba(37, 99, 235, 0.055);
     --text-main: #0f172a;
     --text-sub: #475569;
     --text-footer: #94a3b8;
@@ -41,15 +50,16 @@
     --card-border: #e2e8f0;
     --card-border-hover: #2563eb;
     --card-shadow: 0 4px 16px rgba(15, 23, 42, 0.05);
-    --card-shadow-hover: 0 12px 28px rgba(37, 99, 235, 0.12);
+    --card-shadow-hover: 0 14px 32px rgba(37, 99, 235, 0.18);
     --btn-bg: rgba(37, 99, 235, 0.08);
     --btn-bg-hover: rgba(37, 99, 235, 0.16);
     --btn-text: #2563eb;
     --toggle-bg: rgba(255, 255, 255, 0.92);
     --toggle-border: #cbd5e1;
     --toggle-color: #334155;
-    --clock-bg: rgba(255, 255, 255, 0.78);
+    --clock-bg: rgba(255, 255, 255, 0.82);
     --clock-border: #e2e8f0;
+    --shine-color: rgba(37, 99, 235, 0.12);
 }
 
 *, *::before, *::after {
@@ -58,10 +68,109 @@
     box-sizing: border-box;
 }
 
+@keyframes fadeUp {
+    from { opacity: 0; transform: translateY(18px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
+
+/* แอนิเมชันสั่นแบบการ์ดสุ่ม (Desktop) */
+@keyframes gachaShake {
+    0%   { transform: translateY(-6px) rotate(0deg) scale(1.02); }
+    18%  { transform: translateY(-9px) rotate(-2.8deg) scale(1.03); }
+    36%  { transform: translateY(-7px) rotate(2.8deg) scale(1.03); }
+    54%  { transform: translateY(-9px) rotate(-2deg) scale(1.03); }
+    72%  { transform: translateY(-7px) rotate(1.6deg) scale(1.03); }
+    88%  { transform: translateY(-8px) rotate(-0.8deg) scale(1.02); }
+    100% { transform: translateY(-6px) rotate(0deg) scale(1.02); }
+}
+
+/* แอนิเมชันสั่นตอนแตะบนมือถือ */
+@keyframes mobileTapShake {
+    0%   { transform: scale(0.96) rotate(0deg); }
+    25%  { transform: scale(0.98) rotate(-1.6deg); }
+    50%  { transform: scale(0.98) rotate(1.6deg); }
+    75%  { transform: scale(0.99) rotate(-0.8deg); }
+    100% { transform: scale(1) rotate(0deg); }
+}
+
+/* แอนิเมชันจอสั่นตอนอีเวนต์ใหญ่ */
+@keyframes screenShake {
+    0%, 100% { transform: translate(0, 0); }
+    15% { transform: translate(-5px, 3px); }
+    30% { transform: translate(5px, -4px); }
+    45% { transform: translate(-4px, -2px); }
+    60% { transform: translate(4px, 3px); }
+    75% { transform: translate(-2px, 2px); }
+}
+
+/* ขอบจอเรืองแสงนีออนตอนอีเวนต์ใหญ่ */
+@keyframes edgePulse {
+    0%   { opacity: 0; }
+    25%  { opacity: 1; }
+    100% { opacity: 0; }
+}
+
+/* แสงพื้นหลังขยับช้าๆ */
+@keyframes ambientFloat {
+    0%, 100% { transform: translate(-50%, 0) scale(1); }
+    50%      { transform: translate(-50%, 16px) scale(1.08); }
+}
+
+/* จุดไฟสถานะกระพริบหน้าเวลา */
+@keyframes livePulse {
+    0%, 100% { opacity: 1; transform: scale(1); box-shadow: 0 0 0 0 rgba(34, 197, 94, 0.65); }
+    50%      { opacity: 0.7; transform: scale(1.1); box-shadow: 0 0 0 6px rgba(34, 197, 94, 0); }
+}
+
+/* แสงวิบวับพาดผ่านอัตโนมัติบนมือถือ */
+@keyframes autoShine {
+    0%, 72% { transform: translateX(-140%); }
+    100%    { transform: translateX(140%); }
+}
+
+/* คลื่นน้ำกระจายตอนแตะ */
+@keyframes rippleAnim {
+    from { transform: scale(0); opacity: 0.42; }
+    to   { transform: scale(4.2); opacity: 0; }
+}
+
+/* ปุ่มธีมหมุนสลับ */
+@keyframes themeSpin {
+    from { transform: rotate(-180deg) scale(0.6); opacity: 0.4; }
+    to   { transform: rotate(0deg) scale(1); opacity: 1; }
+}
+
+/* มังกรบินซ้ายไปขวา */
+@keyframes dragonFly {
+    0%   { transform: translate(-240px, 0px) rotate(-4deg); opacity: 0; }
+    8%   { opacity: 1; }
+    25%  { transform: translate(25vw, -35px) rotate(4deg); }
+    50%  { transform: translate(55vw, 25px) rotate(-5deg); }
+    75%  { transform: translate(85vw, -20px) rotate(3deg); }
+    92%  { opacity: 1; }
+    100% { transform: translate(calc(100vw + 260px), 10px) rotate(-2deg); opacity: 0; }
+}
+
+/* มังกรไซเบอร์บินขวาไปซ้าย (สำหรับอีเวนต์ 500) */
+@keyframes dragonFlyReverse {
+    0%   { transform: translate(calc(100vw + 260px), 10px) scaleX(-1) rotate(-4deg); opacity: 0; }
+    8%   { opacity: 1; }
+    25%  { transform: translate(75vw, -30px) scaleX(-1) rotate(4deg); }
+    50%  { transform: translate(45vw, 30px) scaleX(-1) rotate(-5deg); }
+    75%  { transform: translate(15vw, -20px) scaleX(-1) rotate(3deg); }
+    92%  { opacity: 1; }
+    100% { transform: translate(-260px, 0px) scaleX(-1) rotate(-2deg); opacity: 0; }
+}
+
+@keyframes wingFlap {
+    0%, 100% { transform: scaleY(1); }
+    50%      { transform: scaleY(0.55); }
+}
+
 body {
+    position: relative;
     font-family: 'Kanit', sans-serif;
-    background: var(--bg);
-    background-attachment: fixed;
+    background: var(--bg-base);
     color: var(--text-main);
     min-height: 100vh;
     min-height: 100dvh;
@@ -71,36 +180,152 @@ body {
     padding: clamp(20px, 4vh, 50px) clamp(16px, 4vw, 48px);
     overflow-x: hidden;
     transition: background 0.3s ease, color 0.3s ease;
+    user-select: none;
+    -webkit-user-select: none;
 }
 
-/* ปุ่มสลับธีม */
-.theme-toggle {
+/* Canvas เอฟเฟกต์คลิก/แตะ + สายฝนโค้ด + พลุ + เลเซอร์สแกน + EMP */
+#fxCanvas {
+    position: fixed;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 999;
+}
+
+/* ขอบจอเรืองแสงตอนเกิดอีเวนต์ใหญ่ */
+.edge-flash {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 997;
+    opacity: 0;
+    box-shadow: inset 0 0 80px rgba(56, 189, 248, 0.55), inset 0 0 24px rgba(167, 139, 250, 0.45);
+}
+
+.edge-flash.is-active {
+    animation: edgePulse 1.4s ease-out forwards;
+}
+
+/* มังกรบินผ่านหน้าจอ */
+.dragon-event {
+    position: fixed;
+    top: 22%;
+    left: 0;
+    width: clamp(130px, 16vw, 200px);
+    pointer-events: none;
+    z-index: 998;
+    opacity: 0;
+    filter: drop-shadow(0 0 18px rgba(251, 146, 60, 0.85));
+}
+
+.dragon-event.cyber {
+    top: 56%;
+    filter: drop-shadow(0 0 18px rgba(56, 189, 248, 0.9));
+}
+
+.dragon-event.is-flying {
+    animation: dragonFly 4.6s linear forwards;
+}
+
+.dragon-event.cyber.is-flying {
+    animation: dragonFlyReverse 4.6s linear forwards;
+}
+
+.dragon-event .wing {
+    transform-origin: center;
+    animation: wingFlap 0.32s ease-in-out infinite;
+}
+
+/* แอนิเมชันเปิดตัว (เล่นครั้งเดียวตอนโหลดหน้า) */
+body.is-entering .header { animation: fadeUp 0.45s ease both; }
+body.is-entering .card { animation: fadeUp 0.5s ease both; }
+body.is-entering .card:nth-child(1) { animation-delay: 0.08s; }
+body.is-entering .card:nth-child(2) { animation-delay: 0.16s; }
+body.is-entering .card:nth-child(3) { animation-delay: 0.24s; }
+body.is-entering .card:nth-child(4) { animation-delay: 0.32s; }
+body.is-entering .footer { animation: fadeUp 0.5s ease 0.36s both; }
+
+/* แสงฟุ้งด้านบนแบบมีชีวิต */
+body::before {
+    content: "";
+    position: fixed;
+    top: -120px;
+    left: 50%;
+    width: min(900px, 140vw);
+    height: 420px;
+    background: radial-gradient(ellipse at center, var(--bg-glow) 0%, transparent 70%);
+    pointer-events: none;
+    z-index: 0;
+    animation: ambientFloat 9s ease-in-out infinite;
+}
+
+/* พื้นหลังตารางเทคโนโลยีจางๆ (Tech Grid) */
+body::after {
+    content: "";
+    position: fixed;
+    inset: 0;
+    background-image:
+        linear-gradient(to right, var(--grid-line) 1px, transparent 1px),
+        linear-gradient(to bottom, var(--grid-line) 1px, transparent 1px);
+    background-size: 36px 36px;
+    -webkit-mask-image: radial-gradient(ellipse at top center, black 20%, transparent 80%);
+    mask-image: radial-gradient(ellipse at top center, black 20%, transparent 80%);
+    pointer-events: none;
+    z-index: 0;
+}
+
+/* กลุ่มปุ่มควบคุมมุมขวาบน (เปลี่ยนภาษา + สลับธีม) */
+.top-controls {
     position: fixed;
     top: 18px;
     right: 18px;
     z-index: 100;
-    width: 44px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.control-btn {
     height: 44px;
-    border-radius: 50%;
+    border-radius: 999px;
     border: 1px solid var(--toggle-border);
     background: var(--toggle-bg);
-    color: var(--toggle-color);
+    color: var(--text-main);
     display: flex;
     align-items: center;
     justify-content: center;
     cursor: pointer;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
     backdrop-filter: blur(8px);
+    font-family: 'Kanit', sans-serif;
     transition: transform 0.2s ease, background 0.3s ease, border-color 0.3s ease, color 0.3s ease;
     -webkit-tap-highlight-color: transparent;
 }
 
-.theme-toggle:hover {
-    transform: scale(1.08);
+.control-btn:hover {
+    transform: scale(1.06);
 }
 
-.theme-toggle:active {
-    transform: scale(0.95);
+.control-btn:active {
+    transform: scale(0.92);
+}
+
+/* ปุ่มเปลี่ยนภาษา */
+.lang-toggle {
+    padding: 0 14px;
+    font-size: 13px;
+    font-weight: 500;
+    letter-spacing: 0.5px;
+    color: var(--btn-text);
+    min-width: 48px;
+}
+
+/* ปุ่มสลับธีม */
+.theme-toggle {
+    width: 44px;
+    color: var(--toggle-color);
 }
 
 .theme-toggle svg {
@@ -111,6 +336,10 @@ body {
     stroke-width: 2;
     stroke-linecap: round;
     stroke-linejoin: round;
+}
+
+.theme-toggle.is-spinning svg {
+    animation: themeSpin 0.4s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 .theme-toggle .icon-moon {
@@ -126,10 +355,16 @@ body {
 }
 
 .container {
+    position: relative;
+    z-index: 1;
     width: min(92vw, 1380px);
     margin: 0 auto;
     display: flex;
     flex-direction: column;
+}
+
+.container.is-shaking {
+    animation: screenShake 0.48s ease-in-out;
 }
 
 /* HEADER */
@@ -141,6 +376,12 @@ body {
     transition: border-color 0.3s ease;
 }
 
+.brand {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
 .logo {
     width: clamp(56px, 4.8vw, 84px);
     height: clamp(56px, 4.8vw, 84px);
@@ -149,8 +390,9 @@ body {
     display: flex;
     align-items: center;
     justify-content: center;
-    margin: 0 auto clamp(10px, 1.4vh, 16px);
-    box-shadow: 0 8px 28px rgba(37, 99, 235, 0.32);
+    margin-bottom: clamp(10px, 1.4vh, 16px);
+    box-shadow: 0 8px 28px rgba(37, 99, 235, 0.35);
+    flex-shrink: 0;
 }
 
 .logo svg {
@@ -185,6 +427,7 @@ body {
     border-radius: 16px;
     background: var(--clock-bg);
     border: 1px solid var(--clock-border);
+    backdrop-filter: blur(8px);
     transition: background 0.3s ease, border-color 0.3s ease;
 }
 
@@ -194,6 +437,22 @@ body {
     font-weight: 400;
 }
 
+.time-row {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 2px;
+}
+
+.live-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: #22c55e;
+    animation: livePulse 2s ease-in-out infinite;
+    flex-shrink: 0;
+}
+
 .time-text {
     font-size: clamp(20px, 1.8vw, 28px);
     font-weight: 600;
@@ -201,11 +460,12 @@ body {
     font-variant-numeric: tabular-nums;
     letter-spacing: 1px;
     line-height: 1.25;
-    margin-top: 2px;
 }
 
 /* CARDS - 4 คอลัมน์บนจอคอม */
 .cards {
+    --tilt-x: 0deg;
+    --tilt-y: 0deg;
     display: grid;
     grid-template-columns: repeat(4, minmax(0, 1fr));
     gap: clamp(14px, 1.8vw, 26px);
@@ -213,6 +473,10 @@ body {
 }
 
 .card {
+    --accent: #38bdf8;
+    --accent-glow: rgba(56, 189, 248, 0.25);
+    position: relative;
+    overflow: hidden;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -224,19 +488,57 @@ body {
     border-radius: clamp(18px, 1.6vw, 26px);
     text-decoration: none;
     color: var(--text-main);
-    transition: transform 0.25s ease, background 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease, color 0.25s ease;
+    transition: transform 0.22s ease, background 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease, color 0.25s ease;
     -webkit-tap-highlight-color: transparent;
 }
 
+/* สีประจำการ์ดแต่ละใบ */
+.card.theme-orange { --accent: #ea580c; --accent-glow: rgba(234, 88, 12, 0.35); }
+.card.theme-blue   { --accent: #2563eb; --accent-glow: rgba(37, 99, 235, 0.35); }
+.card.theme-purple { --accent: #7c3aed; --accent-glow: rgba(124, 58, 237, 0.35); }
+.card.theme-green  { --accent: #059669; --accent-glow: rgba(5, 150, 105, 0.35); }
+
+/* แสงวิบวับพาดผ่านการ์ด */
+.card::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(120deg, transparent 25%, var(--shine-color) 50%, transparent 75%);
+    transform: translateX(-140%);
+    transition: transform 0.65s ease;
+    pointer-events: none;
+}
+
 .card:hover {
-    transform: translateY(-6px);
+    animation: gachaShake 0.48s ease-in-out;
+    transform: translateY(-6px) scale(1.02);
     background: var(--card-hover);
     border-color: var(--card-border-hover);
     box-shadow: var(--card-shadow-hover);
 }
 
+.card:hover::after {
+    transform: translateX(140%);
+}
+
 .card:active {
-    transform: scale(0.98);
+    transform: scale(0.96);
+}
+
+/* คลื่นน้ำตอนแตะ (Ripple) */
+.ripple {
+    position: absolute;
+    border-radius: 50%;
+    background: var(--accent);
+    pointer-events: none;
+    transform: scale(0);
+    animation: rippleAnim 0.55s ease-out forwards;
+    z-index: 0;
+}
+
+.card > *:not(.ripple) {
+    position: relative;
+    z-index: 1;
 }
 
 /* ICON */
@@ -244,11 +546,18 @@ body {
     width: clamp(54px, 4.5vw, 80px);
     height: clamp(54px, 4.5vw, 80px);
     border-radius: clamp(16px, 1.4vw, 22px);
+    background: var(--accent);
+    box-shadow: 0 8px 20px var(--accent-glow);
     display: flex;
     align-items: center;
     justify-content: center;
     margin: 0 auto clamp(14px, 1.6vw, 22px);
     flex-shrink: 0;
+    transition: transform 0.25s ease;
+}
+
+.card:hover .icon {
+    transform: scale(1.08);
 }
 
 .icon svg {
@@ -259,22 +568,6 @@ body {
     stroke-width: 2;
     stroke-linecap: round;
     stroke-linejoin: round;
-}
-
-.blue {
-    background: #2563eb;
-}
-
-.purple {
-    background: #7c3aed;
-}
-
-.green {
-    background: #059669;
-}
-
-.orange {
-    background: #ea580c;
 }
 
 /* TEXT */
@@ -300,6 +593,7 @@ body {
     display: inline-flex;
     align-items: center;
     justify-content: center;
+    gap: 5px;
     padding: clamp(7px, 0.65vw, 11px) clamp(16px, 1.3vw, 24px);
     border-radius: 999px;
     background: var(--btn-bg);
@@ -335,26 +629,39 @@ body {
     }
 }
 
-/* MOBILE - ชิดบน พอดีจอ 4 การ์ดไม่ต้องเลื่อน */
+/* MOBILE - ฟีลแอปมือถือ เต็มตา มีลูกเล่น พอดีจอไม่ต้องเลื่อน */
 @media (max-width: 640px) {
     body {
         height: 100vh;
         height: 100dvh;
         overflow: hidden;
         align-items: flex-start;
-        padding: 16px 16px 14px;
+        padding: 18px 16px 14px;
     }
 
-    .theme-toggle {
-        top: 14px;
-        right: 14px;
-        width: 38px;
+    .top-controls {
+        top: 18px;
+        right: 16px;
+        gap: 8px;
+    }
+
+    .control-btn {
         height: 38px;
     }
 
+    .lang-toggle {
+        padding: 0 11px;
+        font-size: 12px;
+        min-width: 42px;
+    }
+
+    .theme-toggle {
+        width: 38px;
+    }
+
     .theme-toggle svg {
-        width: 19px;
-        height: 19px;
+        width: 18px;
+        height: 18px;
     }
 
     .container {
@@ -363,63 +670,126 @@ body {
         height: 100%;
     }
 
+    /* หัวเว็บแนวนอน (โลโก้ซ้าย + ชื่อขวา) */
     .header {
-        margin-bottom: 14px;
+        text-align: left;
+        margin-bottom: 16px;
         padding-bottom: 14px;
+    }
+
+    .brand {
+        flex-direction: row;
+        align-items: center;
+        gap: 12px;
+        padding-right: 96px;
     }
 
     .logo {
         width: 46px;
         height: 46px;
         border-radius: 14px;
-        margin-bottom: 8px;
+        margin-bottom: 0;
     }
 
     .header h1 {
-        font-size: 20px;
+        font-size: 19px;
+        line-height: 1.15;
     }
 
     .header p {
-        font-size: 12.5px;
-        margin-top: 1px;
+        font-size: 12px;
+        margin-top: 2px;
     }
 
+    /* กล่องวันที่-เวลาเต็มความกว้าง */
     .datetime-box {
-        margin-top: 10px;
-        padding: 6px 16px;
-        border-radius: 12px;
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: center;
+        width: 100%;
+        margin-top: 14px;
+        padding: 10px 14px;
+        border-radius: 14px;
     }
 
     .date-text {
         font-size: 12px;
     }
 
+    .time-row {
+        margin-top: 0;
+        gap: 6px;
+    }
+
+    .live-dot {
+        width: 7px;
+        height: 7px;
+    }
+
     .time-text {
-        font-size: 18px;
+        font-size: 15px;
+        letter-spacing: 0.5px;
     }
 
     .cards {
         grid-template-columns: 1fr;
-        gap: 10px;
+        gap: 12px;
     }
 
     .card {
         flex-direction: row;
         align-items: center;
         text-align: left;
-        padding: 13px 14px;
-        gap: 13px;
-        border-radius: 16px;
+        padding: 16px 15px 16px 18px;
+        gap: 14px;
+        border-radius: 18px;
+        transform: perspective(750px) rotateX(var(--tilt-x)) rotateY(var(--tilt-y));
+        will-change: transform;
     }
 
+    /* แถบสีประจำการ์ดด้านซ้าย */
+    .card::before {
+        content: "";
+        position: absolute;
+        left: 0;
+        top: 18%;
+        bottom: 18%;
+        width: 4px;
+        border-radius: 0 4px 4px 0;
+        background: var(--accent);
+        box-shadow: 0 0 12px var(--accent-glow);
+    }
+
+    /* แสงวิบวับพาดผ่านอัตโนมัติทีละใบ */
+    .card::after {
+        animation: autoShine 6s ease-in-out infinite;
+    }
+    .card:nth-child(1)::after { animation-delay: 0.6s; }
+    .card:nth-child(2)::after { animation-delay: 2.1s; }
+    .card:nth-child(3)::after { animation-delay: 3.6s; }
+    .card:nth-child(4)::after { animation-delay: 5.1s; }
+
     .card:hover {
+        animation: none;
+        transform: perspective(750px) rotateX(var(--tilt-x)) rotateY(var(--tilt-y));
+    }
+
+    /* การ์ดสั่น + ขอบเรืองแสงตอนแตะบนมือถือ */
+    .card.is-tapped {
+        animation: mobileTapShake 0.36s ease-out;
+        border-color: var(--accent);
+        box-shadow: 0 6px 22px var(--accent-glow);
+    }
+
+    .card:hover .icon {
         transform: none;
     }
 
     .icon {
-        width: 44px;
-        height: 44px;
-        border-radius: 13px;
+        width: 48px;
+        height: 48px;
+        border-radius: 14px;
         margin: 0;
     }
 
@@ -430,130 +800,194 @@ body {
     }
 
     .card h2 {
-        font-size: 15.5px;
-        margin-bottom: 1px;
+        font-size: 16px;
+        margin-bottom: 2px;
     }
 
     .card p {
-        font-size: 12px;
-        line-height: 1.3;
+        font-size: 12.5px;
+        line-height: 1.35;
     }
 
     .btn {
         margin-top: 0;
-        width: 32px;
-        height: 32px;
+        width: 34px;
+        height: 34px;
         padding: 0;
-        font-size: 14px;
+        gap: 0;
+        font-size: 15px;
         border-radius: 50%;
     }
 
-    .btn span {
+    .btn .btn-label {
         display: none;
     }
 
     .footer {
         margin-top: auto;
-        padding-top: 10px;
+        padding-top: 12px;
         font-size: 11.5px;
     }
 }
 </style>
 </head>
 
-<body>
+<body class="is-entering">
 
-<!-- ปุ่มสลับธีม กลางวัน/กลางคืน -->
-<button class="theme-toggle" id="themeToggle" aria-label="สลับธีมกลางวัน/กลางคืน" title="สลับธีมกลางวัน / กลางคืน">
-    <svg class="icon-sun" viewBox="0 0 24 24">
-        <circle cx="12" cy="12" r="4"/>
-        <path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/>
-    </svg>
-    <svg class="icon-moon" viewBox="0 0 24 24">
-        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
-    </svg>
-</button>
+<!-- Canvas เอฟเฟกต์คลิก/แตะ + สายฝนโค้ด + พลุ + สแกน + EMP -->
+<canvas id="fxCanvas"></canvas>
 
-<div class="container">
+<!-- ขอบจอเรืองแสงตอนอีเวนต์ใหญ่ -->
+<div class="edge-flash" id="edgeFlash" aria-hidden="true"></div>
+
+<!-- อีเวนต์มังกรไฟ (ซ้ายไปขวา) -->
+<div class="dragon-event" id="dragonEvent" aria-hidden="true">
+    <svg viewBox="0 0 220 110" fill="none">
+        <defs>
+            <linearGradient id="dragonGrad" x1="0" y1="0" x2="1" y2="0">
+                <stop offset="0%" stop-color="#f97316"/>
+                <stop offset="55%" stop-color="#facc15"/>
+                <stop offset="100%" stop-color="#ef4444"/>
+            </linearGradient>
+        </defs>
+        <path d="M12 64 C 42 48, 66 78, 100 58 C 128 42, 152 54, 178 46" stroke="url(#dragonGrad)" stroke-width="8" stroke-linecap="round"/>
+        <path d="M12 64 L 2 56 L 8 70 Z" fill="#f97316"/>
+        <g class="wing">
+            <path d="M108 54 C 96 14, 134 6, 152 30 C 138 34, 132 44, 126 50 Z" fill="url(#dragonGrad)" opacity="0.92"/>
+            <path d="M98 58 C 82 26, 108 18, 122 38 Z" fill="#fb923c" opacity="0.8"/>
+        </g>
+        <path d="M174 44 L 198 38 L 210 46 L 194 54 L 176 52 Z" fill="url(#dragonGrad)"/>
+        <path d="M180 42 L 170 28 L 186 38 Z" fill="#fde047"/>
+        <circle cx="195" cy="44" r="2.2" fill="#ffffff"/>
+    </svg>
+</div>
+
+<!-- อีเวนต์มังกรไซเบอร์ (ขวาไปซ้าย สำหรับรอบ 500) -->
+<div class="dragon-event cyber" id="dragonEvent2" aria-hidden="true">
+    <svg viewBox="0 0 220 110" fill="none">
+        <defs>
+            <linearGradient id="cyberDragonGrad" x1="0" y1="0" x2="1" y2="0">
+                <stop offset="0%" stop-color="#7c3aed"/>
+                <stop offset="55%" stop-color="#38bdf8"/>
+                <stop offset="100%" stop-color="#22c55e"/>
+            </linearGradient>
+        </defs>
+        <path d="M12 64 C 42 48, 66 78, 100 58 C 128 42, 152 54, 178 46" stroke="url(#cyberDragonGrad)" stroke-width="8" stroke-linecap="round"/>
+        <path d="M12 64 L 2 56 L 8 70 Z" fill="#7c3aed"/>
+        <g class="wing">
+            <path d="M108 54 C 96 14, 134 6, 152 30 C 138 34, 132 44, 126 50 Z" fill="url(#cyberDragonGrad)" opacity="0.92"/>
+            <path d="M98 58 C 82 26, 108 18, 122 38 Z" fill="#38bdf8" opacity="0.8"/>
+        </g>
+        <path d="M174 44 L 198 38 L 210 46 L 194 54 L 176 52 Z" fill="url(#cyberDragonGrad)"/>
+        <path d="M180 42 L 170 28 L 186 38 Z" fill="#a78bfa"/>
+        <circle cx="195" cy="44" r="2.2" fill="#ffffff"/>
+    </svg>
+</div>
+
+<!-- ปุ่มเปลี่ยนภาษา & ปุ่มสลับธีม -->
+<div class="top-controls">
+    <button class="control-btn lang-toggle" id="langToggle" aria-label="เปลี่ยนภาษา" title="เปลี่ยนภาษา (ไทย / อังกฤษ)">EN</button>
+    <button class="control-btn theme-toggle" id="themeToggle" aria-label="สลับธีมกลางวัน/กลางคืน" title="สลับธีมกลางวัน / กลางคืน">
+        <svg class="icon-sun" viewBox="0 0 24 24">
+            <circle cx="12" cy="12" r="4"/>
+            <path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/>
+        </svg>
+        <svg class="icon-moon" viewBox="0 0 24 24">
+            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+        </svg>
+    </button>
+</div>
+
+<div class="container" id="mainContainer">
 
     <header class="header">
-        <div class="logo">
-            <svg viewBox="0 0 24 24">
-                <rect x="3" y="4" width="18" height="14" rx="2"/>
-                <path d="M8 22h8M12 18v4"/>
-            </svg>
+        <div class="brand">
+            <div class="logo">
+                <svg viewBox="0 0 24 24">
+                    <rect x="3" y="4" width="18" height="14" rx="2"/>
+                    <path d="M8 22h8M12 18v4"/>
+                </svg>
+            </div>
+            <div class="brand-text">
+                <h1>IT SYSTEM TA</h1>
+                <p data-i18n="subtitle">ผู้ช่วยอาจารย์ • ตรวจสอบตารางงาน</p>
+            </div>
         </div>
-
-        <h1>IT SYSTEM TA</h1>
-        <p>ตรวจสอบตารางงาน</p>
 
         <div class="datetime-box">
             <div class="date-text" id="dateText">-</div>
-            <div class="time-text" id="timeText">00:00:00 น.</div>
+            <div class="time-row">
+                <span class="live-dot"></span>
+                <div class="time-text" id="timeText">00:00:00 น.</div>
+            </div>
         </div>
     </header>
 
-    <main class="cards">
+    <main class="cards" id="cardsGrid">
 
         <!-- 1. เข้าสู่ระบบ E-tech -->
-        <a class="card"
+        <a class="card theme-orange"
+           data-fx-color="#fb923c"
            href="https://ne-sis.e-tech.ac.th/etech/login.php"
            target="_blank"
            rel="noopener noreferrer">
-            <div class="icon orange">
+            <div class="icon">
                 <svg viewBox="0 0 24 24">
                     <path d="M22 10v6M2 10l10-5 10 5-10 5z"/>
                     <path d="M6 12v5c3 3 9 3 12 0v-5"/>
                 </svg>
             </div>
             <div class="card-text">
-                <h2>เข้าสู่ระบบ E-tech</h2>
-                <p>ระบบสารสนเทศ NE-SIS</p>
+                <h2 data-i18n="card1Title">เข้าสู่ระบบ E-tech</h2>
+                <p data-i18n="card1Desc">ระบบสารสนเทศ NE-SIS</p>
             </div>
-            <div class="btn"><span>เข้าสู่ระบบ&nbsp;</span>↗</div>
+            <div class="btn"><span class="btn-label" data-i18n="btnLogin">เข้าสู่ระบบ</span>↗</div>
         </a>
 
         <!-- 2. แจ้งซ่อม -->
-        <a class="card"
+        <a class="card theme-blue"
+           data-fx-color="#38bdf8"
            href="https://it.e-tech.ac.th/checkstudent/ta/"
            target="_blank"
            rel="noopener noreferrer">
-            <div class="icon blue">
+            <div class="icon">
                 <svg viewBox="0 0 24 24">
                     <path d="M14.7 6.3a5 5 0 0 0-6.4 6.4L3.5 17.5a2.1 2.1 0 0 0 3 3l4.8-4.8a5 5 0 0 0 6.4-6.4L14 13l-3-3z"/>
                 </svg>
             </div>
             <div class="card-text">
-                <h2>แจ้งซ่อม</h2>
-                <p>ระบบบันทึกการซ่อมคอมพิวเตอร์</p>
+                <h2 data-i18n="card2Title">แจ้งซ่อม</h2>
+                <p data-i18n="card2Desc">ระบบบันทึกการซ่อมคอมพิวเตอร์</p>
             </div>
-            <div class="btn"><span>เข้าสู่ระบบ&nbsp;</span>↗</div>
+            <div class="btn"><span class="btn-label" data-i18n="btnLogin">เข้าสู่ระบบ</span>↗</div>
         </a>
 
         <!-- 3. รายงานเวลา -->
-        <a class="card"
+        <a class="card theme-purple"
+           data-fx-color="#a78bfa"
            href="https://it.e-tech.ac.th/checkstudent/TACOM/index.html"
            target="_blank"
            rel="noopener noreferrer">
-            <div class="icon purple">
+            <div class="icon">
                 <svg viewBox="0 0 24 24">
                     <circle cx="12" cy="12" r="9"/>
                     <path d="M12 7v5l3 2"/>
                 </svg>
             </div>
             <div class="card-text">
-                <h2>รายงานเวลา</h2>
-                <p>ระบบบริการ TACOM</p>
+                <h2 data-i18n="card3Title">รายงานเวลา</h2>
+                <p data-i18n="card3Desc">ระบบบริการ TACOM</p>
             </div>
-            <div class="btn"><span>เข้าสู่ระบบ&nbsp;</span>↗</div>
+            <div class="btn"><span class="btn-label" data-i18n="btnLogin">เข้าสู่ระบบ</span>↗</div>
         </a>
 
         <!-- 4. ตรวจสอบลิ้นชัก -->
-        <a class="card"
+        <a class="card theme-green"
+           data-fx-color="#34d399"
            href="https://it.e-tech.ac.th/checkstudent/computer-check/index.php"
            target="_blank"
            rel="noopener noreferrer">
-            <div class="icon green">
+            <div class="icon">
                 <svg viewBox="0 0 24 24">
                     <rect x="3" y="3" width="18" height="14" rx="2"/>
                     <path d="M8 21h8M12 17v4"/>
@@ -561,64 +995,619 @@ body {
                 </svg>
             </div>
             <div class="card-text">
-                <h2>ตรวจสอบลิ้นชัก</h2>
-                <p>ตรวจสอบอุปกรณ์</p>
+                <h2 data-i18n="card4Title">ตรวจสอบลิ้นชัก</h2>
+                <p data-i18n="card4Desc">ตรวจสอบอุปกรณ์</p>
             </div>
-            <div class="btn"><span>เข้าสู่ระบบ&nbsp;</span>↗</div>
+            <div class="btn"><span class="btn-label" data-i18n="btnLogin">เข้าสู่ระบบ</span>↗</div>
         </a>
 
     </main>
 
-    <footer class="footer">IT System TA</footer>
+    <footer class="footer" data-i18n="footer">IT System • ผู้ช่วยอาจารย์</footer>
 
 </div>
 
 <script>
 const root = document.documentElement;
 const toggleBtn = document.getElementById('themeToggle');
+const langBtn = document.getElementById('langToggle');
+const themeColorMeta = document.getElementById('themeColor');
+const mainContainer = document.getElementById('mainContainer');
+const cardsGrid = document.getElementById('cardsGrid');
+const dateEl = document.getElementById('dateText');
+const timeEl = document.getElementById('timeText');
+const dragonEl = document.getElementById('dragonEvent');
+const dragonEl2 = document.getElementById('dragonEvent2');
+const edgeFlash = document.getElementById('edgeFlash');
 
-// โหลดธีมที่เคยบันทึกไว้ หรือตั้งอัตโนมัติตามเวลา (06:00-17:59 = สว่าง, นอกนั้น = มืด)
-const savedTheme = localStorage.getItem('it-ta-theme');
-if (savedTheme) {
-    root.setAttribute('data-theme', savedTheme);
-} else {
-    const hour = new Date().getHours();
-    const autoTheme = (hour >= 6 && hour < 18) ? 'light' : 'dark';
-    root.setAttribute('data-theme', autoTheme);
+/* ===================================================
+   1. ตั้งเวลาอีเวนต์อัตโนมัติ (รูปแบบ "HH:MM")
+=================================================== */
+const SCHEDULED_EVENTS = [
+    { time: '08:00', type: 'dragon' },
+    { time: '12:00', type: 'overclock' },
+    { time: '17:00', type: 'dragon' },
+    { time: '20:00', type: 'matrix' }
+];
+let lastTriggeredMinute = '';
+
+/* ===================================================
+   2. รอบลับเมื่อคลิก/แตะตรงไหนก็ได้ครบจำนวน (ไม่โชว์ตัวเลข)
+=================================================== */
+const TAP_MILESTONES = {
+    15:  'scan',       // ลำแสงเลเซอร์สแกนระบบ
+    40:  'matrix',     // สายฝนโค้ด Binary
+    80:  'dragon',     // มังกรไฟบินผ่าน
+    150: 'overclock',  // จอสั่น + ขอบจอนีออน + พลุไซเบอร์ชุดใหญ่
+    300: 'emp',        // คลื่นแม่เหล็กไฟฟ้า EMP ระเบิดกลางจอ
+    500: 'overdrive'   // มหาอีเวนต์: มังกรคู่ + Matrix + EMP + เลเซอร์ + พลุ
+};
+const MAX_MILESTONE = 500;
+let tapCount = parseInt(localStorage.getItem('it-ta-taps') || '0', 10);
+
+// ข้อความ 2 ภาษา (ไทย / อังกฤษ)
+const translations = {
+    th: {
+        subtitle: 'ผู้ช่วยอาจารย์ • ตรวจสอบตารางงาน',
+        card1Title: 'เข้าสู่ระบบ E-tech',
+        card1Desc: 'ระบบสารสนเทศ NE-SIS',
+        card2Title: 'แจ้งซ่อม',
+        card2Desc: 'ระบบบันทึกการซ่อมคอมพิวเตอร์',
+        card3Title: 'รายงานเวลา',
+        card3Desc: 'ระบบบริการ TACOM',
+        card4Title: 'ตรวจสอบลิ้นชัก',
+        card4Desc: 'ตรวจสอบอุปกรณ์',
+        btnLogin: 'เข้าสู่ระบบ',
+        footer: 'IT System • ผู้ช่วยอาจารย์',
+        themeTitle: 'สลับธีมกลางวัน / กลางคืน',
+        langTitle: 'เปลี่ยนเป็นภาษาอังกฤษ',
+        langBtnText: 'EN'
+    },
+    en: {
+        subtitle: 'Teaching Assistant • Work Schedule',
+        card1Title: 'E-tech Login',
+        card1Desc: 'NE-SIS Information System',
+        card2Title: 'Repair Request',
+        card2Desc: 'Computer Repair System',
+        card3Title: 'Time Report',
+        card3Desc: 'TACOM Service System',
+        card4Title: 'Drawer Check',
+        card4Desc: 'Equipment Inspection',
+        btnLogin: 'Sign In',
+        footer: 'IT System • Teaching Assistant',
+        themeTitle: 'Switch Light / Dark Mode',
+        langTitle: 'Switch to Thai',
+        langBtnText: 'TH'
+    }
+};
+
+let currentLang = localStorage.getItem('it-ta-lang') || 'th';
+
+setTimeout(() => {
+    document.body.classList.remove('is-entering');
+}, 950);
+
+function applyTheme(theme) {
+    root.setAttribute('data-theme', theme);
+    themeColorMeta.setAttribute('content', theme === 'light' ? '#f8fafc' : '#080e1b');
 }
 
-// กดปุ่มสลับธีม
+function applyLanguage(lang) {
+    currentLang = lang;
+    root.setAttribute('lang', lang);
+    const dict = translations[lang];
+
+    document.querySelectorAll('[data-i18n]').forEach((el) => {
+        const key = el.getAttribute('data-i18n');
+        if (dict[key]) el.textContent = dict[key];
+    });
+
+    langBtn.textContent = dict.langBtnText;
+    langBtn.title = dict.langTitle;
+    toggleBtn.title = dict.themeTitle;
+
+    updateDateTime();
+}
+
+const savedTheme = localStorage.getItem('it-ta-theme');
+if (savedTheme) {
+    applyTheme(savedTheme);
+} else {
+    const hour = new Date().getHours();
+    applyTheme((hour >= 6 && hour < 18) ? 'light' : 'dark');
+}
+
 toggleBtn.addEventListener('click', () => {
     const current = root.getAttribute('data-theme');
     const next = current === 'light' ? 'dark' : 'light';
-    root.setAttribute('data-theme', next);
+    applyTheme(next);
     localStorage.setItem('it-ta-theme', next);
+
+    toggleBtn.classList.remove('is-spinning');
+    void toggleBtn.offsetWidth;
+    toggleBtn.classList.add('is-spinning');
+
+    if (navigator.vibrate) navigator.vibrate(10);
 });
 
-// อัปเดตวันที่และเวลาแบบเรียลไทม์
-const dateEl = document.getElementById('dateText');
-const timeEl = document.getElementById('timeText');
+langBtn.addEventListener('click', () => {
+    const nextLang = currentLang === 'th' ? 'en' : 'th';
+    localStorage.setItem('it-ta-lang', nextLang);
+    applyLanguage(nextLang);
+    if (navigator.vibrate) navigator.vibrate(10);
+});
 
-function updateDateTime() {
-    const now = new Date();
+/* ===================================================
+   เอฟเฟกต์ Canvas (คลิก + สแกน + Matrix + EMP + พลุ)
+=================================================== */
+const canvas = document.getElementById('fxCanvas');
+const ctx = canvas.getContext('2d');
+let particles = [];
+let rings = [];
+let matrixDrops = [];
+let scanLines = [];
+let isAnimating = false;
+let isPointerDown = false;
+let lastTrailTime = 0;
 
-    const dateStr = now.toLocaleDateString('th-TH', {
-        weekday: 'long',
-        day: 'numeric',
-        month: 'long',
-        year: 'numeric'
+function resizeCanvas() {
+    const dpr = Math.min(window.devicePixelRatio || 1, 2);
+    canvas.width = window.innerWidth * dpr;
+    canvas.height = window.innerHeight * dpr;
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+}
+resizeCanvas();
+window.addEventListener('resize', resizeCanvas);
+
+function getFxColors(target) {
+    const card = target && target.closest ? target.closest('.card') : null;
+    if (card && card.dataset.fxColor) {
+        return [card.dataset.fxColor, '#ffffff'];
+    }
+    const isLight = root.getAttribute('data-theme') === 'light';
+    return isLight
+        ? ['#2563eb', '#0284c7', '#7c3aed', '#059669']
+        : ['#38bdf8', '#60a5fa', '#a78bfa', '#34d399'];
+}
+
+function spawnBurst(x, y, target, customColors, count = 14, maxRing = 52) {
+    const palette = customColors || getFxColors(target);
+    rings.push({
+        x, y,
+        radius: 6,
+        maxRadius: customColors ? Math.max(maxRing, 75) : maxRing,
+        alpha: 0.78,
+        lineWidth: 2,
+        color: palette[0]
     });
 
+    for (let i = 0; i < count; i++) {
+        const angle = (Math.PI * 2 / count) * i + (Math.random() - 0.5) * 0.4;
+        const speed = (customColors ? 3.2 : 2.2) + Math.random() * 4.2;
+        particles.push({
+            x, y,
+            vx: Math.cos(angle) * speed,
+            vy: Math.sin(angle) * speed,
+            size: 2 + Math.random() * 2.5,
+            alpha: 1,
+            decay: 0.018 + Math.random() * 0.016,
+            color: palette[Math.floor(Math.random() * palette.length)]
+        });
+    }
+    startFxLoop();
+}
+
+function spawnTrail(x, y, target, customColors) {
+    const palette = customColors || getFxColors(target);
+    particles.push({
+        x: x + (Math.random() - 0.5) * 10,
+        y: y + (Math.random() - 0.5) * 10,
+        vx: (Math.random() - 0.5) * 1.4,
+        vy: (Math.random() - 0.5) * 1.4 - 0.4,
+        size: 1.8 + Math.random() * 2.4,
+        alpha: 0.9,
+        decay: 0.03,
+        color: palette[Math.floor(Math.random() * palette.length)]
+    });
+    startFxLoop();
+}
+
+function startFxLoop() {
+    if (isAnimating) return;
+    isAnimating = true;
+    requestAnimationFrame(renderFx);
+}
+
+const MATRIX_CHARS = '0101011010ABCDEF<>/#';
+
+function renderFx() {
+    ctx.clearRect(0, 0, window.innerWidth, window.innerHeight);
+
+    // 1. ลำแสงเลเซอร์สแกนระบบ
+    for (let i = scanLines.length - 1; i >= 0; i--) {
+        const s = scanLines[i];
+        s.y += s.speed;
+        if (Math.random() < 0.65) {
+            particles.push({
+                x: Math.random() * window.innerWidth,
+                y: s.y,
+                vx: (Math.random() - 0.5) * 1.5,
+                vy: -s.speed * 0.25,
+                size: 1.8 + Math.random() * 2,
+                alpha: 0.85,
+                decay: 0.04,
+                color: s.color
+            });
+        }
+        if ((s.speed > 0 && s.y > window.innerHeight + 40) || (s.speed < 0 && s.y < -40)) {
+            scanLines.splice(i, 1);
+            continue;
+        }
+        ctx.save();
+        const grad = ctx.createLinearGradient(0, s.y - 26, 0, s.y + 26);
+        grad.addColorStop(0, 'transparent');
+        grad.addColorStop(0.5, s.color);
+        grad.addColorStop(1, 'transparent');
+        ctx.globalAlpha = 0.28;
+        ctx.fillStyle = grad;
+        ctx.fillRect(0, s.y - 26, window.innerWidth, 52);
+
+        ctx.globalAlpha = 0.95;
+        ctx.strokeStyle = '#ffffff';
+        ctx.shadowColor = s.color;
+        ctx.shadowBlur = 14;
+        ctx.lineWidth = 2.5;
+        ctx.beginPath();
+        ctx.moveTo(0, s.y);
+        ctx.lineTo(window.innerWidth, s.y);
+        ctx.stroke();
+        ctx.restore();
+    }
+
+    // 2. วงคลื่นแสง / EMP Shockwave
+    for (let i = rings.length - 1; i >= 0; i--) {
+        const r = rings[i];
+        r.radius += (r.maxRadius - r.radius) * (r.speed || 0.14);
+        r.alpha -= (r.decay || 0.032);
+        if (r.alpha <= 0) { rings.splice(i, 1); continue; }
+        ctx.save();
+        ctx.beginPath();
+        ctx.arc(r.x, r.y, r.radius, 0, Math.PI * 2);
+        ctx.strokeStyle = r.color;
+        ctx.shadowColor = r.color;
+        ctx.shadowBlur = r.lineWidth > 2 ? 12 : 0;
+        ctx.globalAlpha = r.alpha;
+        ctx.lineWidth = r.lineWidth || 2;
+        ctx.stroke();
+        ctx.restore();
+    }
+
+    // 3. สายฝนโค้ด Binary / Matrix
+    const isLight = root.getAttribute('data-theme') === 'light';
+    for (let i = matrixDrops.length - 1; i >= 0; i--) {
+        const d = matrixDrops[i];
+        d.y += d.speed;
+        d.life -= 0.008;
+        if (Math.random() < 0.2) {
+            d.char = MATRIX_CHARS[Math.floor(Math.random() * MATRIX_CHARS.length)];
+        }
+        if (d.life <= 0 || d.y - d.trail * 18 > window.innerHeight) {
+            matrixDrops.splice(i, 1);
+            continue;
+        }
+
+        ctx.save();
+        ctx.font = `600 ${d.size}px monospace`;
+        ctx.textAlign = 'center';
+
+        for (let t = 0; t < d.trail; t++) {
+            const ty = d.y - t * (d.size + 2);
+            if (ty < -20 || ty > window.innerHeight + 20) continue;
+            const fade = (1 - t / d.trail) * Math.min(d.life * 2, 1);
+            if (fade <= 0) continue;
+
+            if (t === 0) {
+                ctx.fillStyle = isLight ? '#2563eb' : '#ffffff';
+                ctx.shadowColor = isLight ? '#2563eb' : '#38bdf8';
+                ctx.shadowBlur = 10;
+            } else {
+                ctx.fillStyle = isLight ? '#059669' : '#22c55e';
+                ctx.shadowBlur = 0;
+            }
+            ctx.globalAlpha = fade * (t === 0 ? 0.95 : 0.75);
+            const ch = t === 0 ? d.char : MATRIX_CHARS[(d.seed + t) % MATRIX_CHARS.length];
+            ctx.fillText(ch, d.x, ty);
+        }
+        ctx.restore();
+    }
+
+    // 4. ละอองไฟ
+    for (let i = particles.length - 1; i >= 0; i--) {
+        const p = particles[i];
+        p.x += p.vx;
+        p.y += p.vy;
+        p.vx *= 0.94;
+        p.vy = p.vy * 0.94 + 0.04;
+        p.alpha -= p.decay;
+        if (p.alpha <= 0) { particles.splice(i, 1); continue; }
+        ctx.save();
+        ctx.globalAlpha = p.alpha;
+        ctx.fillStyle = p.color;
+        ctx.shadowColor = p.color;
+        ctx.shadowBlur = 8;
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.restore();
+    }
+
+    if (particles.length > 0 || rings.length > 0 || matrixDrops.length > 0 || scanLines.length > 0) {
+        requestAnimationFrame(renderFx);
+    } else {
+        isAnimating = false;
+    }
+}
+
+/* ===================================================
+   ฟังก์ชันรวมอีเวนต์ใหญ่ทั้งหมด
+=================================================== */
+let dragonTimer1 = null;
+let dragonTimer2 = null;
+
+function flashScreen(shake = false) {
+    edgeFlash.classList.remove('is-active');
+    void edgeFlash.offsetWidth;
+    edgeFlash.classList.add('is-active');
+
+    if (shake) {
+        mainContainer.classList.remove('is-shaking');
+        void mainContainer.offsetWidth;
+        mainContainer.classList.add('is-shaking');
+        setTimeout(() => mainContainer.classList.remove('is-shaking'), 520);
+    }
+}
+
+function triggerCyberScan() {
+    scanLines.push({ y: -20, speed: 12, color: '#38bdf8' });
+    setTimeout(() => {
+        scanLines.push({ y: window.innerHeight + 20, speed: -12, color: '#a78bfa' });
+        startFxLoop();
+    }, 650);
+    startFxLoop();
+    if (navigator.vibrate) navigator.vibrate([20, 40, 20]);
+}
+
+function triggerDragon(doubleMode = false) {
+    dragonEl.style.top = `${14 + Math.random() * 20}%`;
+    dragonEl.classList.remove('is-flying');
+    void dragonEl.offsetWidth;
+    dragonEl.classList.add('is-flying');
+
+    clearInterval(dragonTimer1);
+    const fireColors = ['#f97316', '#facc15', '#ef4444', '#ffffff'];
+    dragonTimer1 = setInterval(() => {
+        const rect = dragonEl.getBoundingClientRect();
+        if (rect.left > window.innerWidth + 120) {
+            clearInterval(dragonTimer1);
+            return;
+        }
+        spawnTrail(rect.left + rect.width * 0.15, rect.top + rect.height * 0.55, null, fireColors);
+    }, 35);
+
+    setTimeout(() => {
+        clearInterval(dragonTimer1);
+        dragonEl.classList.remove('is-flying');
+    }, 4700);
+
+    if (doubleMode) {
+        dragonEl2.style.top = `${52 + Math.random() * 18}%`;
+        dragonEl2.classList.remove('is-flying');
+        void dragonEl2.offsetWidth;
+        dragonEl2.classList.add('is-flying');
+
+        clearInterval(dragonTimer2);
+        const cyberColors = ['#38bdf8', '#a78bfa', '#22c55e', '#ffffff'];
+        dragonTimer2 = setInterval(() => {
+            const rect = dragonEl2.getBoundingClientRect();
+            if (rect.right < -120) {
+                clearInterval(dragonTimer2);
+                return;
+            }
+            spawnTrail(rect.left + rect.width * 0.85, rect.top + rect.height * 0.55, null, cyberColors);
+        }, 35);
+
+        setTimeout(() => {
+            clearInterval(dragonTimer2);
+            dragonEl2.classList.remove('is-flying');
+        }, 4700);
+    }
+}
+
+function triggerOverclock() {
+    flashScreen(true);
+    const sets = [
+        ['#fb923c', '#facc15', '#ffffff'],
+        ['#38bdf8', '#a78bfa', '#ffffff'],
+        ['#34d399', '#60a5fa', '#ffffff'],
+        ['#f472b6', '#a78bfa', '#ffffff'],
+        ['#38bdf8', '#22c55e', '#ffffff']
+    ];
+    sets.forEach((colors, idx) => {
+        setTimeout(() => {
+            const x = window.innerWidth * (0.18 + Math.random() * 0.64);
+            const y = window.innerHeight * (0.18 + Math.random() * 0.42);
+            spawnBurst(x, y, null, colors, 24, 85);
+        }, idx * 320);
+    });
+    if (navigator.vibrate) navigator.vibrate([30, 50, 30, 50, 40]);
+}
+
+function triggerMatrixRain() {
+    const cols = Math.min(Math.floor(window.innerWidth / 28), 42);
+    for (let i = 0; i < cols; i++) {
+        setTimeout(() => {
+            matrixDrops.push({
+                x: (i + 0.5) * (window.innerWidth / cols),
+                y: -Math.random() * 140,
+                speed: 4.5 + Math.random() * 4.5,
+                size: 14 + Math.floor(Math.random() * 4),
+                trail: 7 + Math.floor(Math.random() * 7),
+                life: 1.4 + Math.random() * 0.6,
+                char: MATRIX_CHARS[Math.floor(Math.random() * MATRIX_CHARS.length)],
+                seed: Math.floor(Math.random() * 100)
+            });
+            startFxLoop();
+        }, Math.random() * 900);
+    }
+}
+
+function triggerEmpWave() {
+    flashScreen(true);
+    const cx = window.innerWidth / 2;
+    const cy = window.innerHeight / 2;
+    const maxR = Math.hypot(cx, cy) * 1.1;
+    const colors = ['#38bdf8', '#a78bfa', '#34d399', '#fb923c', '#ffffff'];
+
+    colors.forEach((color, idx) => {
+        setTimeout(() => {
+            rings.push({
+                x: cx, y: cy,
+                radius: 10,
+                maxRadius: maxR,
+                alpha: 0.9,
+                lineWidth: 3.5,
+                speed: 0.065,
+                decay: 0.016,
+                color
+            });
+            startFxLoop();
+        }, idx * 140);
+    });
+
+    spawnBurst(cx, cy, null, colors, 44, 140);
+    if (navigator.vibrate) navigator.vibrate([40, 40, 80]);
+}
+
+function triggerOverdrive() {
+    triggerEmpWave();
+    triggerCyberScan();
+    triggerMatrixRain();
+    triggerDragon(true);
+    setTimeout(triggerOverclock, 600);
+    setTimeout(triggerOverclock, 2000);
+    if (navigator.vibrate) navigator.vibrate([60, 40, 60, 40, 120]);
+}
+
+function runEvent(type) {
+    if (type === 'scan') triggerCyberScan();
+    else if (type === 'matrix') triggerMatrixRain();
+    else if (type === 'dragon') triggerDragon(false);
+    else if (type === 'overclock') triggerOverclock();
+    else if (type === 'emp') triggerEmpWave();
+    else if (type === 'overdrive') triggerOverdrive();
+}
+
+// อัปเดตวันที่ เวลา และเช็กตารางอีเวนต์ตามเวลา
+function updateDateTime() {
+    const now = new Date();
     const hh = String(now.getHours()).padStart(2, '0');
     const mm = String(now.getMinutes()).padStart(2, '0');
     const ss = String(now.getSeconds()).padStart(2, '0');
+    const hhmm = `${hh}:${mm}`;
 
-    dateEl.textContent = dateStr;
-    timeEl.textContent = `${hh}:${mm}:${ss} น.`;
+    if (currentLang === 'th') {
+        dateEl.textContent = now.toLocaleDateString('th-TH', {
+            weekday: 'long',
+            day: 'numeric',
+            month: 'long',
+            year: 'numeric'
+        });
+        timeEl.textContent = `${hh}:${mm}:${ss} น.`;
+    } else {
+        dateEl.textContent = now.toLocaleDateString('en-GB', {
+            weekday: 'short',
+            day: 'numeric',
+            month: 'long',
+            year: 'numeric'
+        });
+        timeEl.textContent = `${hh}:${mm}:${ss}`;
+    }
+
+    if (hhmm !== lastTriggeredMinute) {
+        const match = SCHEDULED_EVENTS.find((ev) => ev.time === hhmm);
+        if (match) {
+            lastTriggeredMinute = hhmm;
+            runEvent(match.type);
+        }
+    }
 }
 
-updateDateTime();
+applyLanguage(currentLang);
 setInterval(updateDateTime, 1000);
+
+// คลื่นน้ำกระจายบนการ์ด (Ripple) + สั่นเบาๆ + การ์ดสั่นตอนแตะ
+document.querySelectorAll('.card').forEach((card) => {
+    card.addEventListener('pointerdown', (e) => {
+        const rect = card.getBoundingClientRect();
+        const size = Math.max(rect.width, rect.height) * 0.45;
+        const ripple = document.createElement('span');
+        ripple.className = 'ripple';
+        ripple.style.width = `${size}px`;
+        ripple.style.height = `${size}px`;
+        ripple.style.left = `${e.clientX - rect.left - size / 2}px`;
+        ripple.style.top = `${e.clientY - rect.top - size / 2}px`;
+        card.appendChild(ripple);
+        setTimeout(() => ripple.remove(), 600);
+
+        if (e.pointerType === 'touch') {
+            if (navigator.vibrate) navigator.vibrate(15);
+            card.classList.remove('is-tapped');
+            void card.offsetWidth;
+            card.classList.add('is-tapped');
+            setTimeout(() => card.classList.remove('is-tapped'), 380);
+        }
+    });
+});
+
+// 3D Gyroscope เอียงการ์ดตามการเอียงมือถือ
+if (window.DeviceOrientationEvent) {
+    window.addEventListener('deviceorientation', (e) => {
+        if (window.innerWidth > 640 || e.gamma === null || e.beta === null) return;
+        const clamp = (val, min, max) => Math.min(Math.max(val, min), max);
+        const tiltY = clamp(e.gamma / 7, -4, 4);
+        const tiltX = clamp((e.beta - 45) / 10, -4, 4);
+        cardsGrid.style.setProperty('--tilt-y', `${tiltY.toFixed(2)}deg`);
+        cardsGrid.style.setProperty('--tilt-x', `${(-tiltX).toFixed(2)}deg`);
+    }, { passive: true });
+}
+
+// คลิก/แตะตรงไหนก็ได้บนจอ -> ปล่อยละอองแสง + นับสะสมเพื่อปลดล็อกอีเวนต์ใหญ่
+document.addEventListener('pointerdown', (e) => {
+    isPointerDown = true;
+    spawnBurst(e.clientX, e.clientY, e.target);
+
+    tapCount += 1;
+    const eventType = TAP_MILESTONES[tapCount];
+    if (eventType) {
+        runEvent(eventType);
+    }
+    if (tapCount >= MAX_MILESTONE) {
+        tapCount = 0;
+    }
+    localStorage.setItem('it-ta-taps', String(tapCount));
+});
+
+document.addEventListener('pointermove', (e) => {
+    if (!isPointerDown) return;
+    const now = performance.now();
+    if (now - lastTrailTime > 22) {
+        spawnTrail(e.clientX, e.clientY, e.target);
+        lastTrailTime = now;
+    }
+});
+
+document.addEventListener('pointerup', () => { isPointerDown = false; });
+document.addEventListener('pointercancel', () => { isPointerDown = false; });
 </script>
 
 </body>
