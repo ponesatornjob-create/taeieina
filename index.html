@@ -3,37 +3,33 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>IT System Portal</title>
+<title>IT System TA</title>
 
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600&display=swap');
 
-* {
+*, *::before, *::after {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
 }
 
-html, body {
-    height: 100%;
-}
-
 body {
     font-family: 'Kanit', sans-serif;
-    background: radial-gradient(circle at top center, #132240 0%, #080e1b 60%);
+    background: radial-gradient(circle at top center, #132240 0%, #080e1b 65%);
+    background-attachment: fixed;
     color: #f1f5f9;
-    height: 100vh;
-    height: 100dvh;
-    overflow: hidden;
+    min-height: 100vh;
+    min-height: 100dvh;
     display: flex;
     justify-content: center;
     align-items: center;
-    padding: 24px 16px;
+    padding: clamp(20px, 4vh, 50px) clamp(16px, 4vw, 48px);
+    overflow-x: hidden;
 }
 
 .container {
-    width: 100%;
-    max-width: 1000px;
+    width: min(92vw, 1320px);
     margin: 0 auto;
     display: flex;
     flex-direction: column;
@@ -42,26 +38,26 @@ body {
 /* HEADER */
 .header {
     text-align: center;
-    margin-bottom: 45px;
+    margin-bottom: clamp(28px, 4.5vh, 56px);
     border-bottom: 1px solid #1e293b;
-    padding-bottom: 28px;
+    padding-bottom: clamp(20px, 3vh, 36px);
 }
 
 .logo {
-    width: 70px;
-    height: 70px;
+    width: clamp(60px, 5vw, 92px);
+    height: clamp(60px, 5vw, 92px);
     background: #2563eb;
-    border-radius: 22px;
+    border-radius: clamp(18px, 1.8vw, 28px);
     display: flex;
     align-items: center;
     justify-content: center;
-    margin: 0 auto 15px;
-    box-shadow: 0 8px 24px rgba(37, 99, 235, 0.35);
+    margin: 0 auto clamp(12px, 1.5vh, 20px);
+    box-shadow: 0 8px 28px rgba(37, 99, 235, 0.35);
 }
 
 .logo svg {
-    width: 35px;
-    height: 35px;
+    width: 50%;
+    height: 50%;
     stroke: white;
     fill: none;
     stroke-width: 2;
@@ -70,7 +66,7 @@ body {
 }
 
 .header h1 {
-    font-size: 28px;
+    font-size: clamp(24px, 2.4vw, 42px);
     font-weight: 600;
     letter-spacing: 0.5px;
 }
@@ -78,29 +74,26 @@ body {
 .header p {
     color: #94a3b8;
     margin-top: 6px;
-    font-size: 16px;
+    font-size: clamp(14px, 1.25vw, 22px);
 }
 
 /* CARDS */
 .cards {
-    display: flex;
-    flex-direction: row;
-    justify-content: center;
-    gap: 20px;
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: clamp(14px, 2.2vw, 32px);
     width: 100%;
 }
 
 .card {
-    flex: 1 1 0;
-    min-width: 0;
     display: flex;
     flex-direction: column;
     align-items: center;
     text-align: center;
-    padding: 30px 20px;
+    padding: clamp(24px, 3.2vw, 48px) clamp(16px, 2vw, 32px);
     background: rgba(17, 28, 48, 0.85);
     border: 1px solid #263b5a;
-    border-radius: 22px;
+    border-radius: clamp(18px, 1.8vw, 28px);
     text-decoration: none;
     color: white;
     transition: transform 0.25s ease, background 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
@@ -111,7 +104,7 @@ body {
     transform: translateY(-6px);
     background: #17243a;
     border-color: #38bdf8;
-    box-shadow: 0 12px 30px rgba(56, 189, 248, 0.14);
+    box-shadow: 0 12px 32px rgba(56, 189, 248, 0.15);
 }
 
 .card:active {
@@ -120,19 +113,19 @@ body {
 
 /* ICON */
 .icon {
-    width: 68px;
-    height: 68px;
-    border-radius: 20px;
+    width: clamp(56px, 5vw, 88px);
+    height: clamp(56px, 5vw, 88px);
+    border-radius: clamp(16px, 1.5vw, 24px);
     display: flex;
     align-items: center;
     justify-content: center;
-    margin: 0 auto 18px;
+    margin: 0 auto clamp(14px, 1.8vw, 24px);
     flex-shrink: 0;
 }
 
 .icon svg {
-    width: 34px;
-    height: 34px;
+    width: 50%;
+    height: 50%;
     stroke: white;
     fill: none;
     stroke-width: 2;
@@ -155,19 +148,19 @@ body {
 /* TEXT */
 .card-text {
     width: 100%;
+    margin-bottom: clamp(16px, 2vw, 28px);
 }
 
 .card h2 {
-    font-size: 20px;
+    font-size: clamp(18px, 1.6vw, 28px);
     font-weight: 500;
-    margin-bottom: 8px;
+    margin-bottom: clamp(6px, 0.7vw, 10px);
 }
 
 .card p {
-    font-size: 14px;
+    font-size: clamp(13px, 1.05vw, 18px);
     color: #94a3b8;
     line-height: 1.5;
-    margin-bottom: 20px;
 }
 
 .btn {
@@ -175,14 +168,15 @@ body {
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    padding: 8px 18px;
+    padding: clamp(8px, 0.7vw, 12px) clamp(16px, 1.5vw, 26px);
     border-radius: 999px;
     background: rgba(56, 189, 248, 0.12);
-    font-size: 13px;
+    font-size: clamp(12px, 0.95vw, 16px);
     font-weight: 500;
     color: #38bdf8;
     transition: background 0.25s ease;
     flex-shrink: 0;
+    white-space: nowrap;
 }
 
 .card:hover .btn {
@@ -191,39 +185,38 @@ body {
 
 /* FOOTER */
 .footer {
-    margin-top: 32px;
+    margin-top: clamp(24px, 4vh, 48px);
     text-align: center;
-    font-size: 12px;
+    font-size: clamp(12px, 0.9vw, 15px);
     color: #475569;
 }
 
-/* MOBILE - ชิดบน เต็มตา ไม่โล่ง ไม่ต้องเลื่อน */
-@media (max-width: 768px) {
+/* MOBILE - ชิดบน พอดีจอ ไม่ต้องเลื่อน */
+@media (max-width: 640px) {
     body {
+        height: 100vh;
+        height: 100dvh;
+        overflow: hidden;
         align-items: flex-start;
-        padding: 32px 18px 20px;
+        padding: 28px 18px 20px;
     }
 
     .container {
-        max-width: 420px;
+        width: 100%;
+        max-width: 440px;
         height: 100%;
     }
 
     .header {
-        margin-bottom: 28px;
-        padding-bottom: 22px;
+        margin-bottom: 24px;
+        padding-bottom: 20px;
     }
 
     .logo {
-        width: 62px;
-        height: 62px;
-        border-radius: 20px;
+        width: 60px;
+        height: 60px;
+        border-radius: 18px;
         margin-bottom: 12px;
-    }
-
-    .logo svg {
-        width: 30px;
-        height: 30px;
     }
 
     .header h1 {
@@ -236,18 +229,16 @@ body {
     }
 
     .cards {
-        flex-direction: column;
-        gap: 16px;
+        grid-template-columns: 1fr;
+        gap: 14px;
     }
 
     .card {
-        flex: none;
-        width: 100%;
         flex-direction: row;
         align-items: center;
         text-align: left;
-        padding: 20px 18px;
-        gap: 16px;
+        padding: 18px 16px;
+        gap: 15px;
         border-radius: 20px;
     }
 
@@ -256,30 +247,25 @@ body {
     }
 
     .icon {
-        width: 56px;
-        height: 56px;
+        width: 54px;
+        height: 54px;
         border-radius: 16px;
         margin: 0;
-    }
-
-    .icon svg {
-        width: 28px;
-        height: 28px;
     }
 
     .card-text {
         flex: 1;
         min-width: 0;
+        margin-bottom: 0;
     }
 
     .card h2 {
-        font-size: 18px;
-        margin-bottom: 3px;
+        font-size: 17px;
+        margin-bottom: 2px;
     }
 
     .card p {
         font-size: 13px;
-        margin-bottom: 0;
         line-height: 1.4;
     }
 
@@ -317,7 +303,7 @@ body {
             </svg>
         </div>
 
-        <h1>IT SYSTEM</h1>
+        <h1>IT SYSTEM TA</h1>
         <p>ตรวจสอบตารางงาน</p>
     </header>
 
@@ -371,7 +357,7 @@ body {
                 </svg>
             </div>
             <div class="card-text">
-                <h2>ตรวจสอบคอม</h2>
+                <h2>ตรวจสอบลิ้นชัก</h2>
                 <p>ตรวจสอบอุปกรณ์</p>
             </div>
             <div class="btn"><span>เข้าสู่ระบบ&nbsp;</span>↗</div>
@@ -379,7 +365,7 @@ body {
 
     </main>
 
-    <footer class="footer">IT System Portal</footer>
+    <footer class="footer">IT System TA</footer>
 
 </div>
 
