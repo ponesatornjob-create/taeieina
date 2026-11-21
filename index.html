@@ -26,6 +26,8 @@
     --toggle-bg: rgba(17, 28, 48, 0.85);
     --toggle-border: #263b5a;
     --toggle-color: #fbbf24;
+    --clock-bg: rgba(17, 28, 48, 0.65);
+    --clock-border: rgba(38, 59, 90, 0.8);
 }
 
 [data-theme="light"] {
@@ -46,6 +48,8 @@
     --toggle-bg: rgba(255, 255, 255, 0.92);
     --toggle-border: #cbd5e1;
     --toggle-color: #334155;
+    --clock-bg: rgba(255, 255, 255, 0.78);
+    --clock-border: #e2e8f0;
 }
 
 *, *::before, *::after {
@@ -122,7 +126,7 @@ body {
 }
 
 .container {
-    width: min(92vw, 1320px);
+    width: min(92vw, 1380px);
     margin: 0 auto;
     display: flex;
     flex-direction: column;
@@ -131,21 +135,21 @@ body {
 /* HEADER */
 .header {
     text-align: center;
-    margin-bottom: clamp(28px, 4.5vh, 56px);
+    margin-bottom: clamp(24px, 4vh, 46px);
     border-bottom: 1px solid var(--divider);
-    padding-bottom: clamp(20px, 3vh, 36px);
+    padding-bottom: clamp(18px, 2.8vh, 28px);
     transition: border-color 0.3s ease;
 }
 
 .logo {
-    width: clamp(60px, 5vw, 92px);
-    height: clamp(60px, 5vw, 92px);
+    width: clamp(56px, 4.8vw, 84px);
+    height: clamp(56px, 4.8vw, 84px);
     background: #2563eb;
-    border-radius: clamp(18px, 1.8vw, 28px);
+    border-radius: clamp(16px, 1.6vw, 24px);
     display: flex;
     align-items: center;
     justify-content: center;
-    margin: 0 auto clamp(12px, 1.5vh, 20px);
+    margin: 0 auto clamp(10px, 1.4vh, 16px);
     box-shadow: 0 8px 28px rgba(37, 99, 235, 0.32);
 }
 
@@ -160,22 +164,51 @@ body {
 }
 
 .header h1 {
-    font-size: clamp(24px, 2.4vw, 42px);
+    font-size: clamp(24px, 2.3vw, 38px);
     font-weight: 600;
     letter-spacing: 0.5px;
 }
 
 .header p {
     color: var(--text-sub);
-    margin-top: 6px;
-    font-size: clamp(14px, 1.25vw, 22px);
+    margin-top: 4px;
+    font-size: clamp(14px, 1.15vw, 19px);
 }
 
-/* CARDS */
+/* วันที่และเวลาเรียลไทม์ */
+.datetime-box {
+    display: inline-flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: clamp(12px, 1.6vh, 18px);
+    padding: clamp(8px, 1vh, 12px) clamp(18px, 2.2vw, 28px);
+    border-radius: 16px;
+    background: var(--clock-bg);
+    border: 1px solid var(--clock-border);
+    transition: background 0.3s ease, border-color 0.3s ease;
+}
+
+.date-text {
+    font-size: clamp(13px, 1vw, 16px);
+    color: var(--text-sub);
+    font-weight: 400;
+}
+
+.time-text {
+    font-size: clamp(20px, 1.8vw, 28px);
+    font-weight: 600;
+    color: var(--btn-text);
+    font-variant-numeric: tabular-nums;
+    letter-spacing: 1px;
+    line-height: 1.25;
+    margin-top: 2px;
+}
+
+/* CARDS - 4 คอลัมน์บนจอคอม */
 .cards {
     display: grid;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-    gap: clamp(14px, 2.2vw, 32px);
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: clamp(14px, 1.8vw, 26px);
     width: 100%;
 }
 
@@ -184,11 +217,11 @@ body {
     flex-direction: column;
     align-items: center;
     text-align: center;
-    padding: clamp(24px, 3.2vw, 48px) clamp(16px, 2vw, 32px);
+    padding: clamp(22px, 2.6vw, 40px) clamp(14px, 1.6vw, 24px);
     background: var(--card-bg);
     border: 1px solid var(--card-border);
     box-shadow: var(--card-shadow);
-    border-radius: clamp(18px, 1.8vw, 28px);
+    border-radius: clamp(18px, 1.6vw, 26px);
     text-decoration: none;
     color: var(--text-main);
     transition: transform 0.25s ease, background 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease, color 0.25s ease;
@@ -208,13 +241,13 @@ body {
 
 /* ICON */
 .icon {
-    width: clamp(56px, 5vw, 88px);
-    height: clamp(56px, 5vw, 88px);
-    border-radius: clamp(16px, 1.5vw, 24px);
+    width: clamp(54px, 4.5vw, 80px);
+    height: clamp(54px, 4.5vw, 80px);
+    border-radius: clamp(16px, 1.4vw, 22px);
     display: flex;
     align-items: center;
     justify-content: center;
-    margin: 0 auto clamp(14px, 1.8vw, 24px);
+    margin: 0 auto clamp(14px, 1.6vw, 22px);
     flex-shrink: 0;
 }
 
@@ -240,20 +273,24 @@ body {
     background: #059669;
 }
 
+.orange {
+    background: #ea580c;
+}
+
 /* TEXT */
 .card-text {
     width: 100%;
-    margin-bottom: clamp(16px, 2vw, 28px);
+    margin-bottom: clamp(16px, 1.8vw, 24px);
 }
 
 .card h2 {
-    font-size: clamp(18px, 1.6vw, 28px);
+    font-size: clamp(17px, 1.4vw, 24px);
     font-weight: 500;
-    margin-bottom: clamp(6px, 0.7vw, 10px);
+    margin-bottom: clamp(6px, 0.6vw, 10px);
 }
 
 .card p {
-    font-size: clamp(13px, 1.05vw, 18px);
+    font-size: clamp(12.5px, 0.95vw, 16px);
     color: var(--text-sub);
     line-height: 1.5;
 }
@@ -263,10 +300,10 @@ body {
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    padding: clamp(8px, 0.7vw, 12px) clamp(16px, 1.5vw, 26px);
+    padding: clamp(7px, 0.65vw, 11px) clamp(16px, 1.3vw, 24px);
     border-radius: 999px;
     background: var(--btn-bg);
-    font-size: clamp(12px, 0.95vw, 16px);
+    font-size: clamp(12px, 0.9vw, 15px);
     font-weight: 500;
     color: var(--btn-text);
     transition: background 0.25s ease, color 0.25s ease;
@@ -280,32 +317,44 @@ body {
 
 /* FOOTER */
 .footer {
-    margin-top: clamp(24px, 4vh, 48px);
+    margin-top: clamp(22px, 3.5vh, 40px);
     text-align: center;
     font-size: clamp(12px, 0.9vw, 15px);
     color: var(--text-footer);
 }
 
-/* MOBILE - ชิดบน พอดีจอ ไม่ต้องเลื่อน */
+/* TABLET / จอคอมครึ่งจอ - 2x2 */
+@media (max-width: 960px) {
+    .container {
+        max-width: 720px;
+    }
+
+    .cards {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 18px;
+    }
+}
+
+/* MOBILE - ชิดบน พอดีจอ 4 การ์ดไม่ต้องเลื่อน */
 @media (max-width: 640px) {
     body {
         height: 100vh;
         height: 100dvh;
         overflow: hidden;
         align-items: flex-start;
-        padding: 28px 18px 20px;
+        padding: 16px 16px 14px;
     }
 
     .theme-toggle {
         top: 14px;
         right: 14px;
-        width: 40px;
-        height: 40px;
+        width: 38px;
+        height: 38px;
     }
 
     .theme-toggle svg {
-        width: 20px;
-        height: 20px;
+        width: 19px;
+        height: 19px;
     }
 
     .container {
@@ -315,38 +364,52 @@ body {
     }
 
     .header {
-        margin-bottom: 24px;
-        padding-bottom: 20px;
+        margin-bottom: 14px;
+        padding-bottom: 14px;
     }
 
     .logo {
-        width: 60px;
-        height: 60px;
-        border-radius: 18px;
-        margin-bottom: 12px;
+        width: 46px;
+        height: 46px;
+        border-radius: 14px;
+        margin-bottom: 8px;
     }
 
     .header h1 {
-        font-size: 24px;
+        font-size: 20px;
     }
 
     .header p {
-        font-size: 14px;
-        margin-top: 4px;
+        font-size: 12.5px;
+        margin-top: 1px;
+    }
+
+    .datetime-box {
+        margin-top: 10px;
+        padding: 6px 16px;
+        border-radius: 12px;
+    }
+
+    .date-text {
+        font-size: 12px;
+    }
+
+    .time-text {
+        font-size: 18px;
     }
 
     .cards {
         grid-template-columns: 1fr;
-        gap: 14px;
+        gap: 10px;
     }
 
     .card {
         flex-direction: row;
         align-items: center;
         text-align: left;
-        padding: 18px 16px;
-        gap: 15px;
-        border-radius: 20px;
+        padding: 13px 14px;
+        gap: 13px;
+        border-radius: 16px;
     }
 
     .card:hover {
@@ -354,9 +417,9 @@ body {
     }
 
     .icon {
-        width: 54px;
-        height: 54px;
-        border-radius: 16px;
+        width: 44px;
+        height: 44px;
+        border-radius: 13px;
         margin: 0;
     }
 
@@ -367,21 +430,21 @@ body {
     }
 
     .card h2 {
-        font-size: 17px;
-        margin-bottom: 2px;
+        font-size: 15.5px;
+        margin-bottom: 1px;
     }
 
     .card p {
-        font-size: 13px;
-        line-height: 1.4;
+        font-size: 12px;
+        line-height: 1.3;
     }
 
     .btn {
         margin-top: 0;
-        width: 38px;
-        height: 38px;
+        width: 32px;
+        height: 32px;
         padding: 0;
-        font-size: 16px;
+        font-size: 14px;
         border-radius: 50%;
     }
 
@@ -391,8 +454,8 @@ body {
 
     .footer {
         margin-top: auto;
-        padding-top: 16px;
-        font-size: 12px;
+        padding-top: 10px;
+        font-size: 11.5px;
     }
 }
 </style>
@@ -402,12 +465,10 @@ body {
 
 <!-- ปุ่มสลับธีม กลางวัน/กลางคืน -->
 <button class="theme-toggle" id="themeToggle" aria-label="สลับธีมกลางวัน/กลางคืน" title="สลับธีมกลางวัน / กลางคืน">
-    <!-- ไอคอนพระอาทิตย์ (แสดงตอนโหมดมืด เพื่อกดเปลี่ยนเป็นตอนเช้า) -->
     <svg class="icon-sun" viewBox="0 0 24 24">
         <circle cx="12" cy="12" r="4"/>
         <path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/>
     </svg>
-    <!-- ไอคอนพระจันทร์ (แสดงตอนโหมดสว่าง เพื่อกดเปลี่ยนเป็นกลางคืน) -->
     <svg class="icon-moon" viewBox="0 0 24 24">
         <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
     </svg>
@@ -425,11 +486,34 @@ body {
 
         <h1>IT SYSTEM TA</h1>
         <p>ตรวจสอบตารางงาน</p>
+
+        <div class="datetime-box">
+            <div class="date-text" id="dateText">-</div>
+            <div class="time-text" id="timeText">00:00:00 น.</div>
+        </div>
     </header>
 
     <main class="cards">
 
-        <!-- 1. แจ้งซ่อม -->
+        <!-- 1. เข้าสู่ระบบ E-tech -->
+        <a class="card"
+           href="https://ne-sis.e-tech.ac.th/etech/login.php"
+           target="_blank"
+           rel="noopener noreferrer">
+            <div class="icon orange">
+                <svg viewBox="0 0 24 24">
+                    <path d="M22 10v6M2 10l10-5 10 5-10 5z"/>
+                    <path d="M6 12v5c3 3 9 3 12 0v-5"/>
+                </svg>
+            </div>
+            <div class="card-text">
+                <h2>เข้าสู่ระบบ E-tech</h2>
+                <p>ระบบสารสนเทศ NE-SIS</p>
+            </div>
+            <div class="btn"><span>เข้าสู่ระบบ&nbsp;</span>↗</div>
+        </a>
+
+        <!-- 2. แจ้งซ่อม -->
         <a class="card"
            href="https://it.e-tech.ac.th/checkstudent/ta/"
            target="_blank"
@@ -446,7 +530,7 @@ body {
             <div class="btn"><span>เข้าสู่ระบบ&nbsp;</span>↗</div>
         </a>
 
-        <!-- 2. รายงานเวลา -->
+        <!-- 3. รายงานเวลา -->
         <a class="card"
            href="https://it.e-tech.ac.th/checkstudent/TACOM/index.html"
            target="_blank"
@@ -464,7 +548,7 @@ body {
             <div class="btn"><span>เข้าสู่ระบบ&nbsp;</span>↗</div>
         </a>
 
-        <!-- 3. ตรวจสอบลิ้นชัก -->
+        <!-- 4. ตรวจสอบลิ้นชัก -->
         <a class="card"
            href="https://it.e-tech.ac.th/checkstudent/computer-check/index.php"
            target="_blank"
@@ -510,6 +594,31 @@ toggleBtn.addEventListener('click', () => {
     root.setAttribute('data-theme', next);
     localStorage.setItem('it-ta-theme', next);
 });
+
+// อัปเดตวันที่และเวลาแบบเรียลไทม์
+const dateEl = document.getElementById('dateText');
+const timeEl = document.getElementById('timeText');
+
+function updateDateTime() {
+    const now = new Date();
+
+    const dateStr = now.toLocaleDateString('th-TH', {
+        weekday: 'long',
+        day: 'numeric',
+        month: 'long',
+        year: 'numeric'
+    });
+
+    const hh = String(now.getHours()).padStart(2, '0');
+    const mm = String(now.getMinutes()).padStart(2, '0');
+    const ss = String(now.getSeconds()).padStart(2, '0');
+
+    dateEl.textContent = dateStr;
+    timeEl.textContent = `${hh}:${mm}:${ss} น.`;
+}
+
+updateDateTime();
+setInterval(updateDateTime, 1000);
 </script>
 
 </body>
