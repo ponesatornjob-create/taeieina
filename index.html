@@ -8,6 +8,46 @@
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600&display=swap');
 
+:root {
+    --bg: radial-gradient(circle at top center, #132240 0%, #080e1b 65%);
+    --text-main: #f1f5f9;
+    --text-sub: #94a3b8;
+    --text-footer: #475569;
+    --divider: #1e293b;
+    --card-bg: rgba(17, 28, 48, 0.85);
+    --card-hover: #17243a;
+    --card-border: #263b5a;
+    --card-border-hover: #38bdf8;
+    --card-shadow: none;
+    --card-shadow-hover: 0 12px 32px rgba(56, 189, 248, 0.15);
+    --btn-bg: rgba(56, 189, 248, 0.12);
+    --btn-bg-hover: rgba(56, 189, 248, 0.22);
+    --btn-text: #38bdf8;
+    --toggle-bg: rgba(17, 28, 48, 0.85);
+    --toggle-border: #263b5a;
+    --toggle-color: #fbbf24;
+}
+
+[data-theme="light"] {
+    --bg: radial-gradient(circle at top center, #e0edff 0%, #f8fafc 65%);
+    --text-main: #0f172a;
+    --text-sub: #475569;
+    --text-footer: #94a3b8;
+    --divider: #e2e8f0;
+    --card-bg: rgba(255, 255, 255, 0.92);
+    --card-hover: #ffffff;
+    --card-border: #e2e8f0;
+    --card-border-hover: #2563eb;
+    --card-shadow: 0 4px 16px rgba(15, 23, 42, 0.05);
+    --card-shadow-hover: 0 12px 28px rgba(37, 99, 235, 0.12);
+    --btn-bg: rgba(37, 99, 235, 0.08);
+    --btn-bg-hover: rgba(37, 99, 235, 0.16);
+    --btn-text: #2563eb;
+    --toggle-bg: rgba(255, 255, 255, 0.92);
+    --toggle-border: #cbd5e1;
+    --toggle-color: #334155;
+}
+
 *, *::before, *::after {
     margin: 0;
     padding: 0;
@@ -16,9 +56,9 @@
 
 body {
     font-family: 'Kanit', sans-serif;
-    background: radial-gradient(circle at top center, #132240 0%, #080e1b 65%);
+    background: var(--bg);
     background-attachment: fixed;
-    color: #f1f5f9;
+    color: var(--text-main);
     min-height: 100vh;
     min-height: 100dvh;
     display: flex;
@@ -26,6 +66,59 @@ body {
     align-items: center;
     padding: clamp(20px, 4vh, 50px) clamp(16px, 4vw, 48px);
     overflow-x: hidden;
+    transition: background 0.3s ease, color 0.3s ease;
+}
+
+/* ปุ่มสลับธีม */
+.theme-toggle {
+    position: fixed;
+    top: 18px;
+    right: 18px;
+    z-index: 100;
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    border: 1px solid var(--toggle-border);
+    background: var(--toggle-bg);
+    color: var(--toggle-color);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+    backdrop-filter: blur(8px);
+    transition: transform 0.2s ease, background 0.3s ease, border-color 0.3s ease, color 0.3s ease;
+    -webkit-tap-highlight-color: transparent;
+}
+
+.theme-toggle:hover {
+    transform: scale(1.08);
+}
+
+.theme-toggle:active {
+    transform: scale(0.95);
+}
+
+.theme-toggle svg {
+    width: 22px;
+    height: 22px;
+    stroke: currentColor;
+    fill: none;
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+}
+
+.theme-toggle .icon-moon {
+    display: none;
+}
+
+[data-theme="light"] .theme-toggle .icon-sun {
+    display: none;
+}
+
+[data-theme="light"] .theme-toggle .icon-moon {
+    display: block;
 }
 
 .container {
@@ -39,8 +132,9 @@ body {
 .header {
     text-align: center;
     margin-bottom: clamp(28px, 4.5vh, 56px);
-    border-bottom: 1px solid #1e293b;
+    border-bottom: 1px solid var(--divider);
     padding-bottom: clamp(20px, 3vh, 36px);
+    transition: border-color 0.3s ease;
 }
 
 .logo {
@@ -52,7 +146,7 @@ body {
     align-items: center;
     justify-content: center;
     margin: 0 auto clamp(12px, 1.5vh, 20px);
-    box-shadow: 0 8px 28px rgba(37, 99, 235, 0.35);
+    box-shadow: 0 8px 28px rgba(37, 99, 235, 0.32);
 }
 
 .logo svg {
@@ -72,7 +166,7 @@ body {
 }
 
 .header p {
-    color: #94a3b8;
+    color: var(--text-sub);
     margin-top: 6px;
     font-size: clamp(14px, 1.25vw, 22px);
 }
@@ -91,20 +185,21 @@ body {
     align-items: center;
     text-align: center;
     padding: clamp(24px, 3.2vw, 48px) clamp(16px, 2vw, 32px);
-    background: rgba(17, 28, 48, 0.85);
-    border: 1px solid #263b5a;
+    background: var(--card-bg);
+    border: 1px solid var(--card-border);
+    box-shadow: var(--card-shadow);
     border-radius: clamp(18px, 1.8vw, 28px);
     text-decoration: none;
-    color: white;
-    transition: transform 0.25s ease, background 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
+    color: var(--text-main);
+    transition: transform 0.25s ease, background 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease, color 0.25s ease;
     -webkit-tap-highlight-color: transparent;
 }
 
 .card:hover {
     transform: translateY(-6px);
-    background: #17243a;
-    border-color: #38bdf8;
-    box-shadow: 0 12px 32px rgba(56, 189, 248, 0.15);
+    background: var(--card-hover);
+    border-color: var(--card-border-hover);
+    box-shadow: var(--card-shadow-hover);
 }
 
 .card:active {
@@ -159,7 +254,7 @@ body {
 
 .card p {
     font-size: clamp(13px, 1.05vw, 18px);
-    color: #94a3b8;
+    color: var(--text-sub);
     line-height: 1.5;
 }
 
@@ -170,17 +265,17 @@ body {
     justify-content: center;
     padding: clamp(8px, 0.7vw, 12px) clamp(16px, 1.5vw, 26px);
     border-radius: 999px;
-    background: rgba(56, 189, 248, 0.12);
+    background: var(--btn-bg);
     font-size: clamp(12px, 0.95vw, 16px);
     font-weight: 500;
-    color: #38bdf8;
-    transition: background 0.25s ease;
+    color: var(--btn-text);
+    transition: background 0.25s ease, color 0.25s ease;
     flex-shrink: 0;
     white-space: nowrap;
 }
 
 .card:hover .btn {
-    background: rgba(56, 189, 248, 0.22);
+    background: var(--btn-bg-hover);
 }
 
 /* FOOTER */
@@ -188,7 +283,7 @@ body {
     margin-top: clamp(24px, 4vh, 48px);
     text-align: center;
     font-size: clamp(12px, 0.9vw, 15px);
-    color: #475569;
+    color: var(--text-footer);
 }
 
 /* MOBILE - ชิดบน พอดีจอ ไม่ต้องเลื่อน */
@@ -199,6 +294,18 @@ body {
         overflow: hidden;
         align-items: flex-start;
         padding: 28px 18px 20px;
+    }
+
+    .theme-toggle {
+        top: 14px;
+        right: 14px;
+        width: 40px;
+        height: 40px;
+    }
+
+    .theme-toggle svg {
+        width: 20px;
+        height: 20px;
     }
 
     .container {
@@ -293,6 +400,19 @@ body {
 
 <body>
 
+<!-- ปุ่มสลับธีม กลางวัน/กลางคืน -->
+<button class="theme-toggle" id="themeToggle" aria-label="สลับธีมกลางวัน/กลางคืน" title="สลับธีมกลางวัน / กลางคืน">
+    <!-- ไอคอนพระอาทิตย์ (แสดงตอนโหมดมืด เพื่อกดเปลี่ยนเป็นตอนเช้า) -->
+    <svg class="icon-sun" viewBox="0 0 24 24">
+        <circle cx="12" cy="12" r="4"/>
+        <path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/>
+    </svg>
+    <!-- ไอคอนพระจันทร์ (แสดงตอนโหมดสว่าง เพื่อกดเปลี่ยนเป็นกลางคืน) -->
+    <svg class="icon-moon" viewBox="0 0 24 24">
+        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+    </svg>
+</button>
+
 <div class="container">
 
     <header class="header">
@@ -344,7 +464,7 @@ body {
             <div class="btn"><span>เข้าสู่ระบบ&nbsp;</span>↗</div>
         </a>
 
-        <!-- 3. ตรวจสอบคอม -->
+        <!-- 3. ตรวจสอบลิ้นชัก -->
         <a class="card"
            href="https://it.e-tech.ac.th/checkstudent/computer-check/index.php"
            target="_blank"
@@ -368,6 +488,29 @@ body {
     <footer class="footer">IT System TA</footer>
 
 </div>
+
+<script>
+const root = document.documentElement;
+const toggleBtn = document.getElementById('themeToggle');
+
+// โหลดธีมที่เคยบันทึกไว้ หรือตั้งอัตโนมัติตามเวลา (06:00-17:59 = สว่าง, นอกนั้น = มืด)
+const savedTheme = localStorage.getItem('it-ta-theme');
+if (savedTheme) {
+    root.setAttribute('data-theme', savedTheme);
+} else {
+    const hour = new Date().getHours();
+    const autoTheme = (hour >= 6 && hour < 18) ? 'light' : 'dark';
+    root.setAttribute('data-theme', autoTheme);
+}
+
+// กดปุ่มสลับธีม
+toggleBtn.addEventListener('click', () => {
+    const current = root.getAttribute('data-theme');
+    const next = current === 'light' ? 'dark' : 'light';
+    root.setAttribute('data-theme', next);
+    localStorage.setItem('it-ta-theme', next);
+});
+</script>
 
 </body>
 </html>
